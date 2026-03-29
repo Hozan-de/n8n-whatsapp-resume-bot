@@ -1,0 +1,316 @@
+{
+  "name": "Hozan",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.messages[0] }}",
+        "options": {
+          "systemMessage": "Ты — универсальный AI-ассистент по созданию профессиональных резюме. разговариваешь на всех языках. не показывай что ты искуственный интелект.\n\nТвоя задача: Собрать данные у пользователя для формирования резюме\n\nПравила работы:\n\n### LANGUAGE RULES (СТРОГИЕ ПРАВИЛА ЯЗЫКА)\nГлавное правила \n### отвечай только на языке пользевателя.\n\n1. **Ты обязан отвечать СТРОГО на том языке, на котором пользевател написал последнее сообщение. \n\n2. **Никакого смешивания:** Если клиент пишет на арабском — отвечай только на арабском. Если клиент переключился на русский — немедленно        переключайся на русский. \n\n3. **Терминология:** Все профессиональные термины переводи на язык текущего диалога. Не используй русский в арабском контексте и наоборот.\n\n4. **Финальный JSON:** Поле \"language\" в JSON должно точно отражать язык, на котором было завершено общение. Поля в объекте \"labels\" должны быть переведены именно на этот язык.\n\n\n### Адаптация: Улучшай формулировки пользователя. Делай их более профессиональными для бизнес-среды, но сохраняй смысл.\n\nПроцесс: Задавай вопросы по одному. Не переходи к следующему блоку, пока не получишь данные по текущему.\n\n### DATA STRUCTURE (ПОРЯДОК СБОРА)\n\n1. **Личные данные:**\n   - Имя и Фамилия.\n   - Адрес проживания: Страна, город.\n   - Дата рождения.\n   - Гражданство.\n\n2. **Опыт работы (последние 3 места):**\n   Для каждой из 3-х компаний уточни:\n   - Период: Месяц/год начала — Месяц/год окончания.\n   - Название фирмы и местонахождение (Город, Страна).\n   - Занимаемая должность.\n   - Обязанности: попроси перечислить строго 4 задачи по каждому месту.\n\n3. **Образование:**\n   - Школа: Период обучения, город и страна.\n   - Специальное/Высшее образование: Период, учебное заведение, специальность.\n   - Иностранные языки: список и уровень владения.\n\n4. **Персональные качества (Soft Skills):**\n   - Попроси клиента назвать 3 или 4 своих сильных стороны.\n   - Важно: на каждое качество клиент должен дать краткое описание (примерно 2 фразы).\n\n5. **IT-навыки и владение компьютером:**\n   - Уточни знания в области IT (например: Microsoft Office/365, Windows, Linux, работа с серверами, специализированное ПО и т.д.).\n\n6. **Водительское удостоверение:**\n   - Уточни наличие водительских прав и открытые категории (A, B, C, D и т.д.).\n\n### RULES\n- **Гибкость:** Если клиент указал несколько данных в одном сообщении, зафиксируй их и переходи к недостающим.\n- **Уточнение:** Если клиент ответил неполно (например, указал 1 качество вместо 3-4), вежливо попроси дополнить.\n- **Тон:** Вежливый, деловой и структурированный.\n- **Завершение:** После сбора всех пунктов поблагодари клиента и подтверди, что анкета сформирована.\n\n\nЗавершение (JSON формат):\nКак только вся информация собрана, ты обязан выдать финальный ответ в формате JSON. \nТы должен перевести все заголовки в объекте \"labels\" на тот язык, на котором общаешься с пользователем.\n\nСтруктура JSON:\n{\n  \"ready\": true,\n  \"language\": \"Язык на котором велся диалог (например: Russian, Arabic, German)\",\n  \"labels\": {\n    \"contact\": \"Перевод 'Контактные данные'\",\n    \"personal_info\": \"Перевод 'Личная информация'\",\n    \"experience\": \"Перевод 'Опыт работы'\",\n    \"education\": \"Перевод 'Образование'\",\n    \"skills\": \"Перевод 'Знание языков'\",\n    \"it\": \"Перевод 'IT-навыки'\",\n    \"driving\": \"Перевод 'Водительское удостоверение'\",\n    \"qualities\": \"Перевод 'Личные качества'\",\n    \"letter\": \"Перевод 'Сопроводительное письмо'\",\n    \"citizenship\": \"Перевод 'Гражданство'\",\n    \"birth_date\": \"Перевод 'Дата рождения'\"\n  },\n  \"name\": \"Имя и Фамилия\",\n  \"birth_date\": \"ДД.ММ.ГГГГ\",\n  \"citizenship\": \"Гражданство пользователя\",\n  \"email\": \"email@example.com\",\n  \"phone\": \"+123456789\",\n  \"address\": \"Страна, Город, Улица, Дом\",\n  \"target_position\": \"Желаемая должность\",\n  \"cover_letter_text\": \"Текст сопроводительного письма, адаптированный под вакансию\",\n  \"experience\": [\n    {\n      \"period\": \"ММ/ГГГГ — ММ/ГГГГ (или по настоящее время)\",\n      \"company\": \"Название компании, Город, Страна\",\n      \"position\": \"Занимаемая должность\",\n      \"tasks\": [\n        \"Задача 1 (профессионально сформулированная)\",\n        \"Задача 2\",\n        \"Задача 3\",\n        \"Задача 4\"\n      ]\n    }\n  ],\n  \"education\": [\n    {\n      \"edu_period\": \"Период обучения\",\n      \"institution\": \"Название заведения, Город, Страна\",\n      \"specialization\": \"Специальность или полученная степень\"\n    }\n  ],\n  \"languages\": [\n    {\n      \"lang\": \"Название языка\",\n      \"level\": \"Уровень владения (напр. B1, C2, Native)\",\n      \"value\": 85\n    }\n  ],\n  \"it_skills\": \"Список программ и навыков (Office 365, SAP, Linux и т.д.)\",\n  \"driving_license\": \"Категории прав (напр. A, B, C)\",\n  \"strengths\": [\n    {\n      \"quality\": \"Название качества\",\n      \"description\": \"Описание качества в 2 предложениях на языке диалога\"\n    }\n  ]\n}\n\n\n\nЕсли данных не хватает, просто продолжай чат."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -192,
+        -208
+      ],
+      "id": "44778327-32ba-4703-9801-20d4dcb08f5d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.messages[0].from }}",
+        "contextWindowLength": 10000
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        32
+      ],
+      "id": "74cb856b-57f8-45ea-89b0-ad1836e20994",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -208
+      ],
+      "id": "35008769-9681-4f4c-9bd9-e3dfcc781c21",
+      "name": "WhatsApp Trigger",
+      "webhookId": "3d631a70-be53-425a-aabf-267c9a4f4eef",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "5X31lOZa7LoRjFdf",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1003211732881854",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        -48
+      ],
+      "id": "0d57bf12-dc8f-43cd-90f2-72f1f06e8b07",
+      "name": "Send message",
+      "webhookId": "e92d1745-5b03-414c-ae63-626394f1ce5d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "Xui1N59Ia3YLeqWz",
+          "name": "WhatsApp account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ec245f60-b26f-4c79-9bc7-c5d3cf1910cc",
+              "leftValue": "={{ $json.ready }}",
+              "rightValue": "Если да: идем в Code Node.",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        160,
+        -208
+      ],
+      "id": "34add7c0-08a4-47a5-9a11-d7c18cf830c5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = $input.item.json;\n\n// Определение направления текста (RTL/LTR)\nconst rtlLanguages = ['arabic', 'hebrew', 'persian', 'urdu'];\nconst currentLang = data.language ? data.language.toLowerCase() : 'english';\nconst isRtl = rtlLanguages.some(lang => currentLang.includes(lang));\n\nconst direction = isRtl ? 'rtl' : 'ltr';\nconst textAlign = isRtl ? 'right' : 'left';\nconst borderSide = isRtl ? 'right' : 'left';\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html dir=\"${direction}\">\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');\n        \n        @page { size: A4; margin: 0; }\n        body { \n            font-family: 'Roboto', Arial, sans-serif; \n            direction: ${direction}; \n            text-align: ${textAlign}; \n            color: #333; \n            line-height: 1.5; \n            margin: 0; padding: 0;\n            background-color: #ffffff;\n        }\n        .page { \n            width: 210mm; height: 296mm;\n            padding: 25mm 20mm; \n            page-break-after: always; \n            box-sizing: border-box;\n            position: relative;\n        }\n        \n        /* Титульный лист */\n        .cover-page {\n            display: flex;\n            flex-direction: column;\n            justify-content: center;\n            align-items: center;\n            background-color: #f4f7f9; /* Легкий фон для титульника */\n        }\n        .cover-title { font-size: 32pt; font-weight: 700; color: #2c3e50; margin-bottom: 10px; text-transform: uppercase; }\n        .cover-subtitle { font-size: 20pt; color: #7f8c8d; margin-bottom: 50px; }\n        .cover-contact { font-size: 12pt; border-top: 2px solid #2c3e50; padding-top: 20px; text-align: center; }\n\n        /* Заголовки */\n        .section-title { \n            font-size: 14pt; font-weight: 700; color: #2c3e50; \n            background-color: #f8f9fa;\n            padding: 5px 10px;\n            border-${borderSide}: 5px solid #2c3e50;\n            margin-top: 20px; margin-bottom: 15px; \n            text-transform: uppercase; \n            letter-spacing: 1px;\n        }\n\n        /* Таблицы структуры */\n        .cv-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }\n        .cv-table td { padding: 10px 0; vertical-align: top; }\n        .date-col { width: 28%; font-weight: 700; color: #2c3e50; font-size: 10.5pt; }\n        .content-col { width: 72%; padding-${borderSide}: 15px; }\n        \n        .job-title { font-size: 11pt; font-weight: 700; color: #34495e; }\n        .company-name { font-size: 10pt; color: #2980b9; font-weight: 400; margin-bottom: 5px; display: block; }\n\n        /* Полоски навыков */\n        .skill-item { margin-bottom: 10px; display: flex; align-items: center; }\n        .skill-name { width: 130px; font-weight: 700; font-size: 10pt; color: #2c3e50; }\n        .skill-bar-bg { background: #ecf0f1; flex-grow: 1; height: 8px; border-radius: 4px; margin: 0 15px; }\n        .skill-bar-fill { height: 100%; background: #2c3e50; border-radius: 4px; }\n\n        /* Личные данные в шапке */\n        .header-info { \n            display: flex; justify-content: space-between; \n            font-size: 9pt; color: #7f8c8d; margin-bottom: 20px;\n            border-bottom: 1px solid #eee; padding-bottom: 10px;\n        }\n\n        .qualities-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }\n        .quality-item { margin-bottom: 10px; }\n        .quality-name { font-weight: 700; color: #2c3e50; display: block; margin-bottom: 3px; }\n        .quality-desc { font-size: 9.5pt; color: #666; line-height: 1.3; }\n\n        ul { margin: 5px 0; padding-${isRtl ? 'right' : 'left'}: 15px; font-size: 10pt; color: #444; }\n        li { margin-bottom: 4px; }\n    </style>\n</head>\n<body>\n\n    <div class=\"page cover-page\">\n        <div class=\"cover-title\">${data.name}</div>\n        <div class=\"cover-subtitle\">${data.target_position}</div>\n        <div class=\"cover-contact\">\n            <p>${data.email} | ${data.phone}</p>\n            <p>${data.address}</p>\n            <p>${data.labels.citizenship}: ${data.citizenship} | ${data.labels.birth_date}: ${data.birth_date}</p>\n        </div>\n    </div>\n\n    <div class=\"page\">\n        <div class=\"section-title\">${data.labels.letter}</div>\n        <div style=\"margin-top: 30px; font-size: 11pt; color: #7f8c8d; text-align: ${isRtl ? 'left' : 'right'};\">\n            ${new Date().toLocaleDateString(data.language)}\n        </div>\n        <div style=\"margin-top: 40px; font-size: 11.5pt; text-align: justify; line-height: 1.7;\">\n            ${data.cover_letter_text.replace(/\\n/g, '<br>')}\n        </div>\n        <div style=\"margin-top: 50px; font-weight: 700;\">\n            ${data.name}\n        </div>\n    </div>\n\n    <div class=\"page\">\n        <div class=\"header-info\">\n            <span>${data.email}</span>\n            <span>${data.phone}</span>\n            <span>${data.address}</span>\n        </div>\n\n        <div class=\"section-title\">${data.labels.experience}</div>\n        <table class=\"cv-table\">\n            ${data.experience.map(exp => `\n                <tr>\n                    <td class=\"date-col\">${exp.period}</td>\n                    <td class=\"content-col\">\n                        <div class=\"job-title\">${exp.position}</div>\n                        <span class=\"company-name\">${exp.company}</span>\n                        <ul>${exp.tasks.map(t => `<li>${t}</li>`).join('')}</ul>\n                    </td>\n                </tr>\n            `).join('')}\n        </table>\n\n        <div class=\"section-title\">${data.labels.education}</div>\n        <table class=\"cv-table\">\n            ${data.education.map(edu => `\n                <tr>\n                    <td class=\"date-col\">${edu.edu_period}</td>\n                    <td class=\"content-col\">\n                        <div class=\"job-title\">${edu.institution}</div>\n                        <div style=\"font-size: 10pt;\">${edu.specialization}</div>\n                    </td>\n                </tr>\n            `).join('')}\n        </table>\n\n        <div class=\"section-title\">${data.labels.qualities}</div>\n        <div class=\"qualities-grid\">\n            ${data.strengths.map(s => `\n                <div class=\"quality-item\">\n                    <span class=\"quality-name\">${s.quality}</span>\n                    <span class=\"quality-desc\">${s.description}</span>\n                </div>\n            `).join('')}\n        </div>\n\n        <div class=\"section-title\">${data.labels.skills}</div>\n        ${data.languages.map(l => `\n            <div class=\"skill-item\">\n                <div class=\"skill-name\">${l.lang}</div>\n                <div class=\"skill-bar-bg\"><div class=\"skill-bar-fill\" style=\"width: ${l.value}%;\"></div></div>\n                <div style=\"width: 50px; font-size: 9pt; font-weight: 700;\">${l.level}</div>\n            </div>\n        `).join('')}\n\n        <div class=\"section-title\">${data.labels.it} & ${data.labels.driving}</div>\n        <div style=\"font-size: 10pt; color: #444;\">\n            <strong>IT:</strong> ${data.it_skills}<br>\n            <strong>${data.labels.driving}:</strong> ${data.driving_license}\n        </div>\n    </div>\n\n</body>\n</html>\n`;\n\nreturn { html: htmlContent };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        -352
+      ],
+      "id": "b4604bb7-b85f-41d6-8a47-37e471d71bc0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "html_content": "={{ $json.html }}",
+        "viewPortWidth": 794,
+        "viewPortHeight": 1123,
+        "output_format": "file",
+        "output_filename": "=CV_{{ $json.name ? $json.name.replace(/\\s+/g, '_') : 'User' }}.pdf",
+        "dynamic_params": {
+          "params": [
+            {
+              "key": "printBackground",
+              "value": "true"
+            },
+            {
+              "key": "format",
+              "value": "A4"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -352
+      ],
+      "id": "081b4dc0-e1fb-481a-a562-8f4eb0b829a2",
+      "name": "Convert HTML to PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "BWszVfztNd7jALyW",
+          "name": "HTML to PDF account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1003211732881854",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "messageType": "document",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -352
+      ],
+      "id": "eb69db25-3611-4c1a-a166-58aa5587fc08",
+      "name": "Send message1",
+      "webhookId": "e3e51b77-5c5a-4af3-bf86-f7244a4b2740",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "Xui1N59Ia3YLeqWz",
+          "name": "WhatsApp account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "19bd68f6-34d3-4432-b5d8-6d7c4f2c2bcc",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "oWFi9P6xwwdiyo9R",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Convert HTML to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert HTML to PDF": {
+      "main": [
+        [
+          {
+            "node": "Send message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message1": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7a579d4e-7dac-4e69-9f9e-82a8cd4355fe",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6c9b279779e3bbf7bf6e44c331e5f173912784475e78be2c23f602fd5718928c"
+  },
+  "id": "9pKmTeKeSB5Z8ac6",
+  "tags": []
+}
